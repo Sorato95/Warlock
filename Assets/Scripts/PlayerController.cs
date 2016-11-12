@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnSpellHit(Spell source)
     {
-        source.affectPlayer(gameObject);
+        source.affectPlayer(gameObject.active);
     }
 
 }
