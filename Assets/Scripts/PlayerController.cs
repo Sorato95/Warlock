@@ -115,4 +115,9 @@ public class PlayerController : MonoBehaviour
         impact += direction.normalized * force / 3.0F;
     }
 
+    public void OnSpellHit(Spell source)
+    {
+        source.affectPlayer(gameObject);
+    }
+
 }

@@ -28,7 +28,7 @@ public class Fireball : Spell {
         {
             Destroy(gameObject);
 
-            c.gameObject.SendMessage("OnBulletHit", SendMessageOptions.DontRequireReceiver);
+            c.gameObject.SendMessage("OnSpellHit", this.GetType(), SendMessageOptions.DontRequireReceiver);
         }
     }
 

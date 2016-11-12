@@ -12,4 +12,6 @@ public abstract class Spell : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public abstract void affectPlayer(GameObject player);
 }
