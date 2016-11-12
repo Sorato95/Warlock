@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.Networking;
 
 public class PlayerController : NetworkBehaviour
@@ -33,6 +34,8 @@ public class PlayerController : NetworkBehaviour
 
     private Vector3 impact = Vector3.zero;
 
+    private List<SpellBookItem> spellBook = new List<SpellBookItem>();
+    private OnSpellHitEvent onSpellHitEvent = new OnSpellHitEvent();
 
     // Use this for initialization
     void Start()
@@ -40,6 +43,10 @@ public class PlayerController : NetworkBehaviour
         controller = GetComponent<CharacterController>();
         rigidBody = GetComponent<Rigidbody>();
         mouseLook.Init(transform, playerCam.transform);
+        onSpellHitEvent.AddListener(OnSpellHit);
+
+        //only for testing purposes - later spells will be added to spellbook from merchant
+        spellBook.Add(new SpellBookItem((GameObject) Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
     }
 
     // Update is called once per frame
@@ -110,6 +117,12 @@ public class PlayerController : NetworkBehaviour
             gameField.transform.localScale -= new Vector3(0.1F, 0, 0.1F);
         }
 
+        if (Input.GetKeyDown(KeyCode.Z))        //only for testing purposes
+        {
+            GameObject fireball = Instantiate(spellBook[0].getSpellPrefab());
+            fireball.SendMessage("setCaster", this);
+        }
+
         mouseLook.UpdateCursorLock();
     }
 
@@ -143,9 +156,9 @@ public class PlayerController : NetworkBehaviour
         impact += direction.normalized * force / 3.0F;
     }
 
-    public void OnSpellHit(Spell source)
+    public void OnSpellHit(Spell source, Collision c)
     {
-        //source.affectPlayer(gameObject.active);
+        Knockback(Vector3.back, source.getKnockbackForce());
     }
 
 }
