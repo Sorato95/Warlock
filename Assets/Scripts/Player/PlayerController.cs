@@ -1,14 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
-
     public float moveSpeed = 10.0F;
+
+    public RectTransform healthBar;
+    public const int maxHealth = 100;
+
+    [SyncVar(hook = "OnChangeHealth")]
+    public int currentHealth = maxHealth;
 
     public MouseLook mouseLook;
 
-    private Camera mainCamera;
+    public Camera playerCam;
     private CharacterController controller;
 
     private bool isOnLavaZone;
@@ -31,24 +37,29 @@ public class PlayerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        mainCamera = Camera.main;
         controller = GetComponent<CharacterController>();
         rigidBody = GetComponent<Rigidbody>();
-        mouseLook.Init(transform, mainCamera.transform);
+        mouseLook.Init(transform, playerCam.transform);
     }
 
     // Update is called once per frame
     void Update()
     {
-        mouseLook.LookRotation(transform, mainCamera.transform);
+        if (!isLocalPlayer)
+        {
+            return;
+        }
 
-        Vector3 velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), -1, Input.GetAxis("Vertical"))) * moveSpeed;
+        mouseLook.LookRotation(transform, playerCam.transform);
+
+        Vector3 velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * moveSpeed;
 
         curVelocity = Vector3.Lerp(curVelocity, velocity, friction * Time.deltaTime);
-
-
-
+        
         controller.Move(curVelocity * Time.deltaTime);
+
+        transform.position = new Vector3(transform.position.x, 1, transform.position.z);
+        transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);
 
         if (impact.magnitude > 0.2F)
         {
@@ -69,12 +80,12 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            curFov = Camera.main.fieldOfView;
+            curFov = playerCam.fieldOfView;
             curFov += (Input.GetAxis("Mouse ScrollWheel") * -1) * sensitivity;
             curFov = Mathf.Clamp(curFov, minFov, maxFov);
         }
 
-        Camera.main.fieldOfView = curFov;
+        playerCam.fieldOfView = curFov;
 
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit))
@@ -102,6 +113,25 @@ public class PlayerController : MonoBehaviour
         mouseLook.UpdateCursorLock();
     }
 
+    void OnChangeHealth(int currentHealth)
+    {
+        healthBar.sizeDelta = new Vector2(currentHealth, healthBar.sizeDelta.y);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (!isServer)
+        {
+            return;
+        }
+
+        currentHealth -= amount;
+        if (currentHealth <= 0)
+        {
+            // TODO: player dead -> do stuff
+        }
+    }
+
 
     public void Knockback(Vector3 direction, float force)
     {
@@ -115,7 +145,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnSpellHit(Spell source)
     {
-        source.affectPlayer(gameObject.active);
+        //source.affectPlayer(gameObject.active);
     }
 
 }

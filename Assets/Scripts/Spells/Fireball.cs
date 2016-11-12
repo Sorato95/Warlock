@@ -41,4 +41,9 @@ public class Fireball : Spell {
     {
         this.moveDirection = moveDirection;
     }
+
+    public override void affectPlayer(GameObject obj)
+    {
+
+    }
 }
