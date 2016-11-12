@@ -87,6 +87,8 @@ public class PlayerController : MonoBehaviour
             {
                 isOnLavaZone = false;
             }
+
+            Debug.Log("test");
         }
 
         if (Input.GetKeyDown(KeyCode.K))
@@ -101,8 +103,6 @@ public class PlayerController : MonoBehaviour
 
         mouseLook.UpdateCursorLock();
     }
-
-
 
 
     public void Knockback(Vector3 direction, float force)
