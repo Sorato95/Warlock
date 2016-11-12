@@ -1,44 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class Fireball : Spell {
+public class Fireball : Spell
+{
 
     public float timeToLive;
+    public int shotSpeed = 0;
 
-    private int shotSpeed = 0;
-    private Vector3 moveDirection;
+    private Vector3 moveDirection = Vector3.back;           //only assigned for testing
 
-    private Rigidbody rigidbody;
+    // Update is called once per frame
+    void Update()
+    {
 
-    // Use this for initialization
-    void Start () {
-        rigidbody = GetComponent<Rigidbody>();
-        rigidbody.AddForce(moveDirection * shotSpeed);
+    }
+
+    public override float getKnockbackForce()
+    {
+        return 150;
+    }
+
+    public override void castSpell()
+    {
+        this.gameObject.transform.position = this.getCaster().gameObject.transform.position - Vector3.back;
+        getRigidbody().AddForce(moveDirection * shotSpeed);
         Destroy(gameObject, timeToLive);                    //destroy bullet after <timeToLive> seconds
     }
-	
-	// Update is called once per frame
-	void Update () {
-        
-    }
 
-    void OnCollisionEnter (Collision c)
+    public override void affectPlayer(GameObject player)
     {
-        if (c.gameObject.name == "Player")
-        {
-            Destroy(gameObject);
-
-            c.gameObject.SendMessage("OnSpellHit", this.GetType(), SendMessageOptions.DontRequireReceiver);
-        }
+        Debug.Log(player.name + "sagt 'Aua!'");
     }
 
-    public void setShotSpeed(int shotSpeed)
-    {
-        this.shotSpeed = shotSpeed;
-    }
-
-    public void setMoveDirection(Vector3 moveDirection)
-    {
-        this.moveDirection = moveDirection;
-    }
 }
