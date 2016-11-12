@@ -87,8 +87,6 @@ public class PlayerController : MonoBehaviour
             {
                 isOnLavaZone = false;
             }
-
-            Debug.Log("test");
         }
 
         if (Input.GetKeyDown(KeyCode.K))
@@ -117,7 +115,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnSpellHit(Spell source)
     {
-        source.affectPlayer(gameObject);
+        source.affectPlayer();
     }
 
 }
