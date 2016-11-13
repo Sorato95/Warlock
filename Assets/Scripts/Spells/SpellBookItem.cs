@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class SpellBookItem : ScriptableObject {
+public abstract class SpellBookItem {
     public abstract int getSpellLevel();
     public abstract void incrementSpellLevel();
     public abstract void setSpellLevel(int spellLevel);

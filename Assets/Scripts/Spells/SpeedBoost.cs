@@ -36,7 +36,7 @@ public class SpeedBoost : Spell
 
     public override float getKnockbackForce()
     {
-        throw new NotImplementedException();
+        return 0;
     }
 
 }
