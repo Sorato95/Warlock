@@ -35,14 +35,23 @@ public class PlayerController : NetworkBehaviour
     private Vector3 impact = Vector3.zero;
 
     private List<SpellBookItem> spellBook = new List<SpellBookItem>();
-    private OnSpellHitEvent onSpellHitEvent = new OnSpellHitEvent();
+    private static bool isEventListenerAdded = false;
+    public static OnSpellHitEvent onSpellHitEvent = new OnSpellHitEvent();
+
+    void Awake()
+    {
+        if (!isEventListenerAdded)
+        {
+            onSpellHitEvent.AddListener(OnSpellHit);
+            isEventListenerAdded = true;
+        }
+    }
 
     // Use this for initialization
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
         mouseLook.Init(transform, playerCam.transform);
-        onSpellHitEvent.AddListener(OnSpellHit);
 
         transform.position = new Vector3(transform.position.x, 1, transform.position.y);
 
@@ -161,9 +170,9 @@ public class PlayerController : NetworkBehaviour
         impact += direction.normalized * force / 5.0F;
     }
 
-    public void OnSpellHit(ProjectileSpell source, Vector3 pushDir)
+    public static void OnSpellHit(PlayerController affectedPlayer, ProjectileSpell source, Vector3 pushDir)
     {
-        Knockback(pushDir, source.getKnockbackForce());
+        affectedPlayer.Knockback(pushDir, source.getKnockbackForce());
     }
 
 }

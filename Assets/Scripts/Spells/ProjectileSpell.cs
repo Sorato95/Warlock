@@ -32,7 +32,7 @@ public abstract class ProjectileSpell : Spell {
                 reactToCollision(c);
             }
 
-            onSpellHitEvent.Invoke(this, transform.forward);
+            onSpellHitEvent.Invoke(getCaster(), this, transform.forward);
             affectPlayer(c.gameObject);
         }
         else
