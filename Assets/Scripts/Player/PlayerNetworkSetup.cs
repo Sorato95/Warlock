@@ -17,7 +17,6 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 
             characterCam.enabled = true;
             audioListener.enabled = true;
-            GetComponent<PlayerController>().enabled = true;
         } else
         {
             healthBarCanvas.enabled = true;

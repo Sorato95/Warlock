@@ -53,9 +53,12 @@ public class PlayerController : NetworkBehaviour
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
-        mouseLook.Init(transform, playerCam.transform);
 
-        transform.position = new Vector3(transform.position.x, 1, transform.position.y);
+        if (isLocalPlayer)
+        {
+            mouseLook.Init(transform, playerCam.transform);
+            transform.position = new Vector3(transform.position.x, 1, transform.position.y);
+        }        
 
         //only for testing purposes - later spells will be added to spellbook from merchant
         spellBook.Add(new SpellBookItem<Fireball>((GameObject) Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
@@ -64,7 +67,12 @@ public class PlayerController : NetworkBehaviour
 
     void FixedUpdate()
     {
-        Vector3 velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * moveSpeed;
+        Vector3 velocity = Vector3.zero;
+
+        if (isLocalPlayer)
+        {
+            velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * moveSpeed;
+        }
 
         curVelocity = Vector3.Lerp(curVelocity, velocity, friction * Time.deltaTime);
 
@@ -146,6 +154,13 @@ public class PlayerController : NetworkBehaviour
     {
         GameObject fireball = spellBook[0].generateSpell(this);
 
+        /*
+        GameObject fireball = (GameObject)Instantiate(fireballPrefab, spellSpawner.position, spellSpawner.rotation);
+
+        //fireball.GetComponent<Rigidbody>().velocity = fireball.transform.forward * 6;
+        fireball.GetComponent<Rigidbody>().AddForce(fireball.transform.forward * 200);
+        */
+
         NetworkServer.Spawn(fireball);
     }
 
@@ -183,7 +198,7 @@ public class PlayerController : NetworkBehaviour
     {
         affectedPlayer.Knockback(-pushDir, source.getKnockbackForce());
     }
-
+    
     public Transform getSpellSpawner()
     {
         return spellSpawner;
