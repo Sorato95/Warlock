@@ -15,7 +15,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
             GameObject.Find("Main Camera").SetActive(false);
 
             characterCam.enabled = true;
-            GetComponent<CharacterController>().enabled = true;
+            //GetComponent<CharacterController>().enabled = true;
             GetComponent<PlayerController>().enabled = true;
         } else
         {

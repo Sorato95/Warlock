@@ -16,10 +16,9 @@ public class PlayerController : NetworkBehaviour
     public MouseLook mouseLook;
 
     public Camera playerCam;
-    private CharacterController controller;
 
     private bool isOnLavaZone;
-    private float friction = 5f;
+    public float friction = 5f;
 
     private float minFov = 8f;
     private float maxFov = 60f;
@@ -40,59 +39,37 @@ public class PlayerController : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        controller = GetComponent<CharacterController>();
         rigidBody = GetComponent<Rigidbody>();
         mouseLook.Init(transform, playerCam.transform);
         onSpellHitEvent.AddListener(OnSpellHit);
+
+        transform.position = new Vector3(transform.position.x, 1, transform.position.y);
 
         //only for testing purposes - later spells will be added to spellbook from merchant
         spellBook.Add(new SpellBookItem((GameObject) Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        if (!isLocalPlayer)
-        {
-            return;
-        }
-
-        mouseLook.LookRotation(transform, playerCam.transform);
-
         Vector3 velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * moveSpeed;
 
         curVelocity = Vector3.Lerp(curVelocity, velocity, friction * Time.deltaTime);
-        
-        controller.Move(curVelocity * Time.deltaTime);
 
-        transform.position = new Vector3(transform.position.x, 1, transform.position.z);
-        transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);
+        rigidBody.velocity = curVelocity;
 
-        if (impact.magnitude > 0.2F)
+        if (impact.magnitude > 0.2F) 
         {
-            controller.Move(impact * Time.deltaTime);
+            rigidBody.velocity = curVelocity - impact;
         }
 
         // consumes the impact energy each cycle:
         impact = Vector3.Lerp(impact, Vector3.zero, friction * Time.deltaTime);
 
-        if (friction <= 5)
+        
+        if (friction < 5)
         {
-            friction += 0.01f;
+            friction += 0.35f * Time.deltaTime;
         }
-
-        if (curFov == 0)
-        {
-            curFov = 28f;
-        }
-        else
-        {
-            curFov = playerCam.fieldOfView;
-            curFov += (Input.GetAxis("Mouse ScrollWheel") * -1) * sensitivity;
-            curFov = Mathf.Clamp(curFov, minFov, maxFov);
-        }
-
-        playerCam.fieldOfView = curFov;
 
         RaycastHit hit;
         if (Physics.Raycast(transform.position, Vector3.down, out hit))
@@ -106,6 +83,32 @@ public class PlayerController : NetworkBehaviour
                 isOnLavaZone = false;
             }
         }
+
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
+        mouseLook.LookRotation(transform, playerCam.transform);
+    
+        if (curFov == 0)
+        {
+            curFov = 28f;
+        }
+        else
+        {
+            curFov = playerCam.fieldOfView;
+            curFov += (Input.GetAxis("Mouse ScrollWheel") * -1) * sensitivity;
+            curFov = Mathf.Clamp(curFov, minFov, maxFov);
+        }
+
+        playerCam.fieldOfView = curFov;
 
         if (Input.GetKeyDown(KeyCode.K))
         {
@@ -148,12 +151,12 @@ public class PlayerController : NetworkBehaviour
 
     public void Knockback(Vector3 direction, float force)
     {
-        friction = 0.5f;
+        friction = 0.3f;
 
         direction.Normalize();
         direction.y = 0;
 
-        impact += direction.normalized * force / 3.0F;
+        impact += direction.normalized * force / 5.0F;
     }
 
     public void OnSpellHit(Spell source, Collision c)
