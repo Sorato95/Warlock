@@ -17,7 +17,7 @@ public class Fireball : ProjectileSpell {
 
     public override void castSpell()
     {
-        getRigidbody().AddForce(this.transform.forward * shotSpeed);
+        getRigidbody().velocity = this.transform.forward * shotSpeed;
         Destroy(gameObject, timeToLive);                    //destroy bullet after <timeToLive> seconds
     }
 
