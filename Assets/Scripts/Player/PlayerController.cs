@@ -34,6 +34,8 @@ public class PlayerController : NetworkBehaviour
 
     private Vector3 impact = Vector3.zero;
 
+    public GameObject fireballPrefab;
+
     private List<SpellBookItem> spellBook = new List<SpellBookItem>();
     private static bool isEventListenerAdded = false;
     public static OnSpellHitEvent onSpellHitEvent = new OnSpellHitEvent();
@@ -142,7 +144,13 @@ public class PlayerController : NetworkBehaviour
     [Command]
     void CmdCast()
     {
-        GameObject fireball = spellBook[0].generateSpell(this);
+        //GameObject fireball = spellBook[0].generateSpell(this);
+
+        GameObject fireball = (GameObject)Instantiate(fireballPrefab, spellSpawner.position, spellSpawner.rotation);
+
+        //fireball.GetComponent<Rigidbody>().velocity = fireball.transform.forward * 6;
+        fireball.GetComponent<Rigidbody>().AddForce(fireball.transform.forward * 200);
+
 
         NetworkServer.Spawn(fireball);
     }
