@@ -6,17 +6,9 @@ public abstract class ProjectileSpell : Spell {
     public abstract bool isDestroyedOnCollision(bool isPlayerCollision);
     public abstract void reactToCollision(Collider c);
 
-    private OnSpellHitEvent onSpellHitEvent;
-
     public override void initializeSpell(SpellInitializer init)
     {
         base.initializeSpell(init);
-        onSpellHitEvent = init.onSpellHitEvent;
-    }
-
-    public OnSpellHitEvent getOnSpellHitEvent()
-    {
-        return onSpellHitEvent;
     }
 
     void OnTriggerEnter(Collider c)
@@ -32,8 +24,8 @@ public abstract class ProjectileSpell : Spell {
                 reactToCollision(c);
             }
 
-            onSpellHitEvent.Invoke(c.gameObject.GetComponent<PlayerController>(), this, transform.forward);
-            affectPlayer(c.gameObject);
+            getCaster().getOnSpellHitEvent().Invoke(c.gameObject.GetComponent<PlayerController>(), this, transform.forward);
+            affectPlayer(c.gameObject.GetComponent<PlayerController>());
         }
         else
         {

@@ -58,7 +58,8 @@ public class PlayerController : NetworkBehaviour
         }
 
         //only for testing purposes - later spells will be added to spellbook from merchant
-        spellBook.Add(new SpellBookItem((GameObject) Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
+        spellBook.Add(new SpellBookItem<Fireball>((GameObject) Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
+        spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
     }
 
     void FixedUpdate()
@@ -142,22 +143,22 @@ public class PlayerController : NetworkBehaviour
             CmdFire();
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha2))        //only for testing purposes
+        {
+            GameObject fireball = spellBook[1].generateSpell(this);
+        }
+
         mouseLook.UpdateCursorLock();
     }
 
     [Command]
     void CmdFire()
     {
-        Vector3 spellPos = GetComponent<PlayerSync>().syncSpellPos;
-
-
-         GameObject fireball = (GameObject)Instantiate(spellBook[0].getSpellPrefab(), spellPos, spellSpawner.rotation);
-         fireball.SendMessage("initializeSpell", new SpellInitializer(this, onSpellHitEvent));
-         fireball.SendMessage("castSpell");
+        GameObject fireball = spellBook[0].generateSpell(this);
 
         //GameObject fireball = (GameObject)Instantiate(spellBook[0].getSpellPrefab(), spellPos, spellSpawner.rotation);
         //fireball.GetComponent<Rigidbody>().velocity = fireball.transform.forward * 6;
-
+        
         NetworkServer.Spawn(fireball);
     }
 
@@ -196,4 +197,13 @@ public class PlayerController : NetworkBehaviour
         affectedPlayer.Knockback(-pushDir, source.getKnockbackForce());
     }
 
+    public Transform getSpellSpawner()
+    {
+        return spellSpawner;
+    }
+
+    public OnSpellHitEvent getOnSpellHitEvent()
+    {
+        return onSpellHitEvent;
+    }
 }
