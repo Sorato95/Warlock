@@ -2,6 +2,6 @@
 using System.Collections;
 using UnityEngine.Events;
 
-public class OnSpellHitEvent : UnityEvent<Spell, Collision> {
+public class OnSpellHitEvent : UnityEvent<ProjectileSpell, Vector3> {
 
 }

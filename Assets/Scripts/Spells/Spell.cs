@@ -3,19 +3,22 @@ using System.Collections;
 
 public abstract class Spell : MonoBehaviour
 {
-
+    //assumes spell is already initialized -- unexpectable behaviour if it isn't
+    public abstract void castSpell();           
     public abstract float getKnockbackForce();
-    public abstract void castSpell();
     public abstract void affectPlayer(GameObject player);
 
-    private Rigidbody rigidbody;
     private PlayerController caster;
-    private OnSpellHitEvent onSpellHitEvent = new OnSpellHitEvent();
-
-    // Called when script instance is being loaded
+    
+    // Called when script instance is being loaded (== sorta-constructor)
     void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        
+    }
+
+    public virtual void initializeSpell(SpellInitializer init)
+    {
+        caster = init.caster;
     }
 
     public PlayerController getCaster()
@@ -25,23 +28,10 @@ public abstract class Spell : MonoBehaviour
 
     public Rigidbody getRigidbody()
     {
-        return rigidbody;
+        return GetComponent<Rigidbody>();
     }
 
-    public void setCaster(PlayerController caster)
-    {
-        this.caster = caster;
-        this.castSpell();           //only cast spell once caster is set
-    }
 
-    void OnCollisionEnter(Collision c)
-    {
-        if (c.gameObject.name == "Player")
-        {
-            Destroy(gameObject);
 
-            onSpellHitEvent.Invoke(this, c);
-            affectPlayer(c.gameObject);
-        }
-    }
+
 }
