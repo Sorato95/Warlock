@@ -25,7 +25,7 @@ public abstract class ProjectileSpell : Spell {
             }
 
             getCaster().getOnSpellHitEvent().Invoke(c.gameObject.GetComponent<PlayerController>(), this, transform.forward);
-            affectPlayer(c.gameObject);
+            affectPlayer(c.gameObject.GetComponent<PlayerController>());
         }
         else
         {

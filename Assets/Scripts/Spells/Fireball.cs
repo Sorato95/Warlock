@@ -21,7 +21,7 @@ public class Fireball : ProjectileSpell {
         Destroy(gameObject, timeToLive);                    //destroy bullet after <timeToLive> seconds
     }
 
-    public override void affectPlayer(GameObject player)
+    public override void affectPlayer(PlayerController player)
     {
         Debug.Log(player.name + " sagt 'Aua!'");
     }

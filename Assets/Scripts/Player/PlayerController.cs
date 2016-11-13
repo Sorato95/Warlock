@@ -57,6 +57,7 @@ public class PlayerController : NetworkBehaviour
 
         //only for testing purposes - later spells will be added to spellbook from merchant
         spellBook.Add(new SpellBookItem<Fireball>((GameObject) Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
+        spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
     }
 
     void FixedUpdate()
@@ -128,6 +129,11 @@ public class PlayerController : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))        //only for testing purposes
         {
             CmdCast();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))        //only for testing purposes
+        {
+            GameObject fireball = spellBook[1].generateSpell(this);
         }
 
         mouseLook.UpdateCursorLock();

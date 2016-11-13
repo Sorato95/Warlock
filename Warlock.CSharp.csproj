@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\Spells\Fireball.cs" />
     <Compile Include="Assets\Scripts\Spells\OnSpellHitEvent.cs" />
     <Compile Include="Assets\Scripts\Spells\ProjectileSpell.cs" />
+    <Compile Include="Assets\Scripts\Spells\SpeedBoost.cs" />
     <Compile Include="Assets\Scripts\Spells\Spell.cs" />
     <Compile Include="Assets\Scripts\Spells\SpellBookItem.cs" />
     <Compile Include="Assets\Scripts\Spells\SpellBookItemGeneric.cs" />

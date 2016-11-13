@@ -33,7 +33,7 @@ public class SpellBookItem <T> : SpellBookItem where T : Spell{
 
         if (spellPrefab != null)
         {
-            spellObj = (GameObject)Instantiate(spellPrefab, caster.getSpellSpawner().position, caster.getSpellSpawner().rotation);
+            spellObj = (GameObject) Instantiate(spellPrefab, caster.getSpellSpawner().position, caster.getSpellSpawner().rotation);
             Spell spell = spellObj.GetComponent<T>();
             spell.initializeSpell(new SpellInitializer(caster, spellLevel));
             spell.castSpell();
@@ -41,7 +41,13 @@ public class SpellBookItem <T> : SpellBookItem where T : Spell{
         }
         else
         {
-            spellObj = null;
+            spellObj = new GameObject();
+            spellObj.AddComponent<T>();
+            GameObject clonedSpellObj = (GameObject) Instantiate(spellObj, new Vector3(0, -3), new Quaternion());
+            Spell spell = clonedSpellObj.GetComponent<T>();
+            spell.initializeSpell(new SpellInitializer(caster, spellLevel));
+            spell.castSpell();
+            return spellObj;
         }
 
         return spellObj;
