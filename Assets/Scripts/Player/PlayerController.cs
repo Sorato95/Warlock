@@ -111,11 +111,6 @@ public class PlayerController : NetworkBehaviour
 
         playerCam.fieldOfView = curFov;
 
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            Knockback(Vector3.back, 250);
-        }
-
         if (Input.GetKeyDown(KeyCode.P))
         {
             gameField.transform.localScale -= new Vector3(0.1F, 0, 0.1F);
@@ -123,12 +118,20 @@ public class PlayerController : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))        //only for testing purposes
         {
-            GameObject fireball = (GameObject) Instantiate(spellBook[0].getSpellPrefab(), spellSpawner.position, spellSpawner.rotation);
-            fireball.SendMessage("initializeSpell", new SpellInitializer(this, onSpellHitEvent));
-            fireball.SendMessage("castSpell");
+            CmdCast();
         }
 
         mouseLook.UpdateCursorLock();
+    }
+
+    [Command]
+    void CmdCast()
+    {
+        GameObject fireball = (GameObject)Instantiate(spellBook[0].getSpellPrefab(), spellSpawner.position, spellSpawner.rotation);
+        fireball.SendMessage("initializeSpell", new SpellInitializer(this, onSpellHitEvent));
+        fireball.SendMessage("castSpell");
+
+        NetworkServer.Spawn(fireball);
     }
 
     void OnChangeHealth(int currentHealth)
@@ -163,7 +166,7 @@ public class PlayerController : NetworkBehaviour
 
     public void OnSpellHit(ProjectileSpell source, Vector3 pushDir)
     {
-        Knockback(pushDir, source.getKnockbackForce());
+        Knockback(-pushDir, source.getKnockbackForce());
     }
 
 }
