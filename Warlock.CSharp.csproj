@@ -68,7 +68,6 @@
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerNetworkSetup.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSync.cs" />
-    <Compile Include="Assets\Scripts\Player\TestPlayerController.cs" />
     <Compile Include="Assets\Scripts\Spells\Fireball.cs" />
     <Compile Include="Assets\Scripts\Spells\OnSpellHitEvent.cs" />
     <Compile Include="Assets\Scripts\Spells\ProjectileSpell.cs" />

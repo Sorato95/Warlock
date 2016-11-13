@@ -9,20 +9,16 @@ public class PlayerSync : NetworkBehaviour
     private Vector3 syncPos;
 
     [SyncVar]
-    public Vector3 syncSpellPos;
-
-    [SyncVar]
     private Quaternion syncPlayerRotation;
 
     public Transform playerTransform;
-    public Transform spellSpawnTransform;
 
     public float lerpRate = 15;
 
     public void FixedUpdate()
     {
         TransmitTransform();
-        
+
         LerpPosition();
         LerpRotation();
     }
@@ -32,7 +28,6 @@ public class PlayerSync : NetworkBehaviour
         if (!isLocalPlayer)
         {
             playerTransform.position = Vector3.Lerp(playerTransform.position, syncPos, Time.deltaTime * lerpRate);
-            spellSpawnTransform.position = Vector3.Lerp(spellSpawnTransform.position, syncSpellPos, Time.deltaTime * lerpRate);
         }
     }
 
@@ -46,10 +41,9 @@ public class PlayerSync : NetworkBehaviour
     }
 
     [Command]
-    void CmdProvideTransformToServer(Vector3 pos, Quaternion playerRot, Vector3 spellPos)
+    void CmdProvideTransformToServer(Vector3 pos, Quaternion playerRot)
     {
         syncPos = pos;
-        syncSpellPos = spellPos;
         syncPlayerRotation = playerRot;
     }
 
@@ -60,7 +54,7 @@ public class PlayerSync : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            CmdProvideTransformToServer(playerTransform.position, playerTransform.rotation, spellSpawnTransform.position);
+            CmdProvideTransformToServer(playerTransform.position, playerTransform.rotation);
         }
     }
 }
