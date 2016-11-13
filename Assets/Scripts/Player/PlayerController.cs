@@ -34,7 +34,7 @@ public class PlayerController : NetworkBehaviour
 
     private Vector3 impact = Vector3.zero;
 
-    public GameObject fireballPrefab;
+    public PlayerSync playerSync;
 
     private List<SpellBookItem> spellBook = new List<SpellBookItem>();
     private static bool isEventListenerAdded = false;
@@ -42,6 +42,8 @@ public class PlayerController : NetworkBehaviour
 
     void Awake()
     {
+        playerSync = GetComponent<PlayerSync>();
+
         if (!isEventListenerAdded)
         {
             onSpellHitEvent.AddListener(OnSpellHit);
@@ -67,7 +69,7 @@ public class PlayerController : NetworkBehaviour
 
     void FixedUpdate()
     {
-        Vector3 velocity = Vector3.zero;
+        Vector3 velocity = playerSync.syncVelocity;
 
         if (isLocalPlayer)
         {
