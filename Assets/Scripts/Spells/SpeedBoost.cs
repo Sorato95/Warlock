@@ -20,7 +20,10 @@ public class SpeedBoost : Spell
 
     public void OnDestroy()
     {
-        getCaster().moveSpeed = getCaster().moveSpeed / (2 + getSpellLevel());
+        if (getCaster() != null)
+        {
+            getCaster().moveSpeed = getCaster().moveSpeed / (2 + getSpellLevel());
+        }
     }
 
     public override void affectPlayer(PlayerController player)
