@@ -8,15 +8,16 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 
     public Camera characterCam;
 
+    public AudioListener audioListener;
+
     // Use this for initialization
     void Start () {
         if (isLocalPlayer)
         {
             GameObject.Find("Main Camera").SetActive(false);
 
+            audioListener.enabled = true;
             characterCam.enabled = true;
-            //GetComponent<CharacterController>().enabled = true;
-            GetComponent<PlayerController>().enabled = true;
         } else
         {
             healthBarCanvas.enabled = true;

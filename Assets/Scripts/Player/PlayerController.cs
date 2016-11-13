@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class PlayerController : NetworkBehaviour
 {
     public Transform spellSpawner;          //assigned by Inspector
+    public GameObject bulletPrefab;
     public float moveSpeed = 10.0F;
 
     public RectTransform healthBar;
@@ -27,9 +28,7 @@ public class PlayerController : NetworkBehaviour
     private float curFov;
 
     private Vector3 curVelocity = Vector3.zero;
-
-    public GameObject gameField;
-    public GameObject bulletTest;
+   
     private Rigidbody rigidBody;
 
     private Vector3 impact = Vector3.zero;
@@ -51,9 +50,12 @@ public class PlayerController : NetworkBehaviour
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
-        mouseLook.Init(transform, playerCam.transform);
 
-        transform.position = new Vector3(transform.position.x, 1, transform.position.y);
+        if (isLocalPlayer)
+        {
+            mouseLook.Init(transform, playerCam.transform);
+            transform.position = new Vector3(transform.position.x, 1, transform.position.y);
+        }
 
         //only for testing purposes - later spells will be added to spellbook from merchant
         spellBook.Add(new SpellBookItem((GameObject) Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
@@ -61,7 +63,18 @@ public class PlayerController : NetworkBehaviour
 
     void FixedUpdate()
     {
-        Vector3 velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * moveSpeed;
+        //maybe need to remove cause knockback
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
+        Vector3 velocity = Vector3.zero;
+
+        if (isLocalPlayer)
+        {
+            velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * moveSpeed;
+        }
 
         curVelocity = Vector3.Lerp(curVelocity, velocity, friction * Time.deltaTime);
 
@@ -93,8 +106,6 @@ public class PlayerController : NetworkBehaviour
                 isOnLavaZone = false;
             }
         }
-
-
     }
 
     // Update is called once per frame
@@ -120,25 +131,32 @@ public class PlayerController : NetworkBehaviour
 
         playerCam.fieldOfView = curFov;
 
+        /*
         if (Input.GetKeyDown(KeyCode.P))
         {
             gameField.transform.localScale -= new Vector3(0.1F, 0, 0.1F);
-        }
+        }*/
 
         if (Input.GetKeyDown(KeyCode.Alpha1))        //only for testing purposes
         {
-            CmdCast();
+            CmdFire();
         }
 
         mouseLook.UpdateCursorLock();
     }
 
     [Command]
-    void CmdCast()
+    void CmdFire()
     {
-        GameObject fireball = (GameObject)Instantiate(spellBook[0].getSpellPrefab(), spellSpawner.position, spellSpawner.rotation);
-        fireball.SendMessage("initializeSpell", new SpellInitializer(this, onSpellHitEvent));
-        fireball.SendMessage("castSpell");
+        Vector3 spellPos = GetComponent<PlayerSync>().syncSpellPos;
+
+
+         GameObject fireball = (GameObject)Instantiate(spellBook[0].getSpellPrefab(), spellPos, spellSpawner.rotation);
+         fireball.SendMessage("initializeSpell", new SpellInitializer(this, onSpellHitEvent));
+         fireball.SendMessage("castSpell");
+
+        //GameObject fireball = (GameObject)Instantiate(spellBook[0].getSpellPrefab(), spellPos, spellSpawner.rotation);
+        //fireball.GetComponent<Rigidbody>().velocity = fireball.transform.forward * 6;
 
         NetworkServer.Spawn(fireball);
     }
