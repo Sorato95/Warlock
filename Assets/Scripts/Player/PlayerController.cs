@@ -144,13 +144,7 @@ public class PlayerController : NetworkBehaviour
     [Command]
     void CmdCast()
     {
-        //GameObject fireball = spellBook[0].generateSpell(this);
-
-        GameObject fireball = (GameObject)Instantiate(fireballPrefab, spellSpawner.position, spellSpawner.rotation);
-
-        //fireball.GetComponent<Rigidbody>().velocity = fireball.transform.forward * 6;
-        fireball.GetComponent<Rigidbody>().AddForce(fireball.transform.forward * 200);
-
+        GameObject fireball = spellBook[0].generateSpell(this);
 
         NetworkServer.Spawn(fireball);
     }
