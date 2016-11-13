@@ -22,7 +22,7 @@ public class SpeedBoost : Spell
     {
         if (getCaster() != null)
         {
-            getCaster().moveSpeed = getCaster().moveSpeed / (2 + getSpellLevel());
+            getCaster().curMoveSpeed = getCaster().curMoveSpeed / (2 + getSpellLevel());
         }
     }
 
@@ -33,7 +33,7 @@ public class SpeedBoost : Spell
 
     public override void castSpell()
     {
-        getCaster().moveSpeed = getCaster().moveSpeed * (2 + getSpellLevel());
+        getCaster().curMoveSpeed = getCaster().curMoveSpeed * (2 + getSpellLevel());
         isPlayerBoosted = true;
     }
 

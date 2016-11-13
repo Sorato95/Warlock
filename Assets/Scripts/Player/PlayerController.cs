@@ -5,8 +5,10 @@ using UnityEngine.Networking;
 
 public class PlayerController : NetworkBehaviour
 {
-    public Transform spellSpawner;          //assigned by Inspector
-    public float moveSpeed = 10.0F;
+    public Transform spellSpawner;           //assigned by Inspector
+    public float standardMoveSpeed;          //assigned by Inspector
+    public MovementManager movementManager;
+    public float curMoveSpeed;               //asigned by movementManager
 
     public RectTransform healthBar;
     public const int maxHealth = 100;
@@ -40,9 +42,11 @@ public class PlayerController : NetworkBehaviour
     private static bool isEventListenerAdded = false;
     public static OnSpellHitEvent onSpellHitEvent = new OnSpellHitEvent();
 
+    // "constructor" when script is initialized
     void Awake()
     {
         playerSync = GetComponent<PlayerSync>();
+        movementManager = new MovementManager(this);
 
         if (!isEventListenerAdded)
         {
@@ -73,7 +77,7 @@ public class PlayerController : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * moveSpeed;
+            velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * curMoveSpeed;
         }
 
         curVelocity = Vector3.Lerp(curVelocity, velocity, friction * Time.deltaTime);
