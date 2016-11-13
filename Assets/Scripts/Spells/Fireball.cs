@@ -2,19 +2,12 @@
 using System.Collections;
 using System;
 
-public class Fireball : Spell
-{
+public class Fireball : ProjectileSpell {
 
-    public float timeToLive;
-    public int shotSpeed = 0;
+    public float timeToLive;            //assigned by Inspector
+    public int shotSpeed;               //assigned by Inspector
 
     private Vector3 moveDirection = Vector3.back;           //only assigned for testing
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public override float getKnockbackForce()
     {
@@ -23,14 +16,15 @@ public class Fireball : Spell
 
     public override void castSpell()
     {
-        this.gameObject.transform.position = this.getCaster().gameObject.transform.position - Vector3.back;
-        getRigidbody().AddForce(moveDirection * shotSpeed);
+        getRigidbody().AddForce(this.transform.forward * shotSpeed);
         Destroy(gameObject, timeToLive);                    //destroy bullet after <timeToLive> seconds
     }
 
     public override void affectPlayer(GameObject player)
     {
-        Debug.Log(player.name + "sagt 'Aua!'");
+        Debug.Log(player.name + " sagt 'Aua!'");
     }
 
+    public override bool isDestroyedOnCollision(bool isPlayerCollision) { return true; }
+    public override void reactToCollision(Collider c) { return; }
 }

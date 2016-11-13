@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class PlayerController : NetworkBehaviour
 {
+    public Transform spellSpawner;          //assigned by Inspector
     public float moveSpeed = 10.0F;
 
     public RectTransform healthBar;
@@ -117,10 +118,11 @@ public class PlayerController : NetworkBehaviour
             gameField.transform.localScale -= new Vector3(0.1F, 0, 0.1F);
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))        //only for testing purposes
+        if (Input.GetKeyDown(KeyCode.Alpha1))        //only for testing purposes
         {
-            GameObject fireball = Instantiate(spellBook[0].getSpellPrefab());
-            fireball.SendMessage("setCaster", this);
+            GameObject fireball = (GameObject) Instantiate(spellBook[0].getSpellPrefab(), spellSpawner.position, spellSpawner.rotation);
+            fireball.SendMessage("initializeSpell", new SpellInitializer(this, onSpellHitEvent));
+            fireball.SendMessage("castSpell");
         }
 
         mouseLook.UpdateCursorLock();
@@ -156,9 +158,9 @@ public class PlayerController : NetworkBehaviour
         impact += direction.normalized * force / 3.0F;
     }
 
-    public void OnSpellHit(Spell source, Collision c)
+    public void OnSpellHit(ProjectileSpell source, Vector3 pushDir)
     {
-        Knockback(Vector3.back, source.getKnockbackForce());
+        Knockback(pushDir, source.getKnockbackForce());
     }
 
 }
