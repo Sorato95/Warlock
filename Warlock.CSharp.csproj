@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\Spells\ProjectileSpell.cs" />
     <Compile Include="Assets\Scripts\Spells\Spell.cs" />
     <Compile Include="Assets\Scripts\Spells\SpellBookItem.cs" />
+    <Compile Include="Assets\Scripts\Spells\SpellBookItemGeneric.cs" />
     <Compile Include="Assets\Scripts\Spells\SpellInitializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />

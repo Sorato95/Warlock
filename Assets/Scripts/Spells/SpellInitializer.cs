@@ -4,16 +4,11 @@ using System.Collections;
 public class SpellInitializer {
 
     public PlayerController caster;
-    public OnSpellHitEvent onSpellHitEvent;
+    public int spellLevel;
 
-    public SpellInitializer(PlayerController caster)
+    public SpellInitializer(PlayerController caster, int spellLevel)
     {
         this.caster = caster;
-    }
-
-    public SpellInitializer(PlayerController caster, OnSpellHitEvent onSpellHitEvent)
-    {
-        this.caster = caster;
-        this.onSpellHitEvent = onSpellHitEvent;
+        this.spellLevel = spellLevel;
     }
 }

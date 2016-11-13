@@ -4,7 +4,7 @@ using System.Collections;
 public abstract class Spell : MonoBehaviour
 {
     //assumes spell is already initialized -- unexpectable behaviour if it isn't
-    public abstract void castSpell();           
+    public abstract void castSpell();
     public abstract float getKnockbackForce();
     public abstract void affectPlayer(GameObject player);
 
