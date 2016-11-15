@@ -73,12 +73,11 @@ public class PlayerController : NetworkBehaviour
 
     void FixedUpdate()
     {
-        Vector3 velocity = playerSync.syncVelocity;
+		if (!isLocalPlayer) {
+			return;
+		}
 
-        if (isLocalPlayer)
-        {
-            velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * curMoveSpeed;
-        }
+		Vector3 velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * curMoveSpeed;
 
         curVelocity = Vector3.Lerp(curVelocity, velocity, friction * Time.deltaTime);
 
