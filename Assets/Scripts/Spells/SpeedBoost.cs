@@ -7,13 +7,14 @@ public class SpeedBoost : Spell
 
     private bool isPlayerBoosted = false;
     private float secondsBoosted = 0;
+    private float speedDifference;
 
     // Update is called once per frame
     void Update()
     {
         if (isPlayerBoosted)
         {
-            Destroy(this.gameObject, 2);
+            Destroy(this.gameObject, 2 + (0.5F * getSpellLevel()));
             isPlayerBoosted = false;
         }
     }
@@ -22,7 +23,7 @@ public class SpeedBoost : Spell
     {
         if (getCaster() != null)
         {
-            getCaster().curMoveSpeed = getCaster().curMoveSpeed / (2 + getSpellLevel());
+            getCaster().movementManager.impact(speedDifference, "Add");
         }
     }
 
@@ -33,7 +34,7 @@ public class SpeedBoost : Spell
 
     public override void castSpell()
     {
-        getCaster().curMoveSpeed = getCaster().curMoveSpeed * (2 + getSpellLevel());
+        speedDifference = getCaster().movementManager.impact(1 + getSpellLevel(), "Multiply");
         isPlayerBoosted = true;
     }
 

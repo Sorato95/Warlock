@@ -33,23 +33,19 @@ public class SpellBookItem <T> : SpellBookItem where T : Spell{
 
         if (spellPrefab != null)
         {
-            spellObj = (GameObject) MonoBehaviour.Instantiate(spellPrefab, caster.getSpellSpawner().position, caster.getSpellSpawner().rotation);
-            Spell spell = spellObj.GetComponent<T>();
-            spell.initializeSpell(new SpellInitializer(caster, spellLevel));
-            spell.castSpell();
-            return spellObj;
+            spellObj = (GameObject)MonoBehaviour.Instantiate(spellPrefab, caster.getSpellSpawner().position, caster.getSpellSpawner().rotation);
         }
         else
         {
             spellObj = new GameObject();
             spellObj.AddComponent<T>();
-            GameObject clonedSpellObj = (GameObject) MonoBehaviour.Instantiate(spellObj, new Vector3(0, -3), new Quaternion());
-            MonoBehaviour.Destroy(spellObj);
-
-            Spell spell = clonedSpellObj.GetComponent<T>();
-            spell.initializeSpell(new SpellInitializer(caster, spellLevel));
-            spell.castSpell();
-            return clonedSpellObj;
         }
+        spellObj.name = typeof(T).Name;
+
+        Spell spell = spellObj.GetComponent<T>();
+        spell.initializeSpell(new SpellInitializer(caster, spellLevel));
+        spell.castSpell();
+
+        return spellObj;
     }
 }
