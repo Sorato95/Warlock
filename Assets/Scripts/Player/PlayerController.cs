@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -38,14 +39,18 @@ public class PlayerController : NetworkBehaviour
 
     public PlayerSync playerSync;
 
+    public Text textPlayerId;
+
     private List<SpellBookItem> spellBook = new List<SpellBookItem>();
-    private static bool isEventListenerAdded = false;
-    public static OnSpellHitEvent onSpellHitEvent = new OnSpellHitEvent();
+    private bool isEventListenerAdded = false;
+    public OnSpellHitEvent onSpellHitEvent;
 
     // "constructor" when script is initialized
     void Awake()
     {
+        onSpellHitEvent = new OnSpellHitEvent();
         playerSync = GetComponent<PlayerSync>();
+
         movementManager = new MovementManager(this);
 
         if (!isEventListenerAdded)
@@ -62,28 +67,30 @@ public class PlayerController : NetworkBehaviour
 
         if (isLocalPlayer)
         {
+            textPlayerId.text = "PlayerId: " + netId;
             mouseLook.Init(transform, playerCam.transform);
             transform.position = new Vector3(transform.position.x, 1, transform.position.y);
-        }        
+        }
 
         //only for testing purposes - later spells will be added to spellbook from merchant
-        spellBook.Add(new SpellBookItem<Fireball>((GameObject) Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
+        spellBook.Add(new SpellBookItem<Fireball>((GameObject)Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
         spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
     }
 
     void FixedUpdate()
     {
-		if (!isLocalPlayer) {
-			return;
-		}
+        if (!isLocalPlayer)
+        {
+            return;
+        }
 
-		Vector3 velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * curMoveSpeed;
+        Vector3 velocity = transform.TransformDirection(new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"))) * curMoveSpeed;
 
         curVelocity = Vector3.Lerp(curVelocity, velocity, friction * Time.deltaTime);
 
         rigidBody.velocity = curVelocity;
 
-        if (impact.magnitude > 0.2F) 
+        if (impact.magnitude > 0.2F)
         {
             rigidBody.velocity = curVelocity - impact;
         }
@@ -91,7 +98,7 @@ public class PlayerController : NetworkBehaviour
         // consumes the impact energy each cycle:
         impact = Vector3.Lerp(impact, Vector3.zero, friction * Time.deltaTime);
 
-        
+
         if (friction < 5)
         {
             friction += 0.35f * Time.deltaTime;
@@ -122,7 +129,7 @@ public class PlayerController : NetworkBehaviour
         }
 
         mouseLook.LookRotation(transform, playerCam.transform);
-    
+
         if (curFov == 0)
         {
             curFov = 28f;
@@ -199,11 +206,12 @@ public class PlayerController : NetworkBehaviour
         impact += direction.normalized * force / 5.0F;
     }
 
-    public static void OnSpellHit(PlayerController affectedPlayer, ProjectileSpell source, Vector3 pushDir)
+    public void OnSpellHit(PlayerController affectedPlayer, ProjectileSpell source, Vector3 pushDir)
     {
+        Debug.Log("OnSpellHit called for player" + affectedPlayer.netId);
         affectedPlayer.Knockback(-pushDir, source.getKnockbackForce());
     }
-    
+
     public Transform getSpellSpawner()
     {
         return spellSpawner;

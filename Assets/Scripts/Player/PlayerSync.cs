@@ -10,6 +10,7 @@ public class PlayerSync : NetworkBehaviour
 
     [SyncVar]
     private Quaternion syncPlayerRotation;
+    
 
     public Transform playerTransform;
 
@@ -46,7 +47,6 @@ public class PlayerSync : NetworkBehaviour
         syncPos = pos;
         syncPlayerRotation = playerRot;
     }
-
 
 
     [ClientCallback]
