@@ -45,6 +45,8 @@ public class PlayerController : NetworkBehaviour
     private bool isEventListenerAdded = false;
     public OnSpellHitEvent onSpellHitEvent;
 
+	public ScriptableProjectileSpell test_Fireball;
+
     // "constructor" when script is initialized
     void Awake()
     {
@@ -76,6 +78,8 @@ public class PlayerController : NetworkBehaviour
         //only for testing purposes - later spells will be added to spellbook from merchant
         spellBook.Add(new SpellBookItem<Fireball>( (GameObject) Resources.Load("Prefabs/Fireball"), 1 ));
         spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
+
+		DebugConsole.Log ("testmessage");
     }
 
     void FixedUpdate()
@@ -159,8 +163,23 @@ public class PlayerController : NetworkBehaviour
             spellBook[1].generateSpell(this);       //speedboost
         }
 
+		if (Input.GetKeyDown (KeyCode.H)) {
+			CmdTestFireball (netId);
+		}
+
+		if (Input.GetKeyDown (KeyCode.L)) {
+			DebugConsole.isVisible = !DebugConsole.isVisible;
+		}
+
         mouseLook.UpdateCursorLock();
     }
+
+	[Command]
+	void CmdTestFireball(NetworkInstanceId casterNetworkId) {
+		test_Fireball.Initialize (casterNetworkId);
+		GameObject fireball = test_Fireball.TriggerSpell ();
+		NetworkServer.Spawn (fireball);
+	}
 
     [Command]
     void CmdCast()
@@ -204,6 +223,14 @@ public class PlayerController : NetworkBehaviour
         Debug.Log("OnSpellHit called for player" + this.netId);
         this.Knockback(-pushDir, source.getKnockbackForce());
     }
+
+	public void OnHit(ProjectileSpellScript source) {
+		if (!isLocalPlayer) {
+			return;
+		}
+		Debug.Log("OnHit called for player" + this.netId);
+		this.Knockback(-source.transform.forward, source.knockBackForce);
+	}
 
     public Transform getSpellSpawner()
     {

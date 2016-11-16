@@ -1,0 +1,17 @@
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/markusgauwatz/UnityProjects/Warlock/obj/Debug/Assembly-CSharp.dll
+/Users/markusgauwatz/UnityProjects/Warlock/obj/Debug/Assembly-CSharp.dll.mdb
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/UnityEngine.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/UnityEditor.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Mono.Cecil.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Unity.DataContract.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/markusgauwatz/UnityProjects/Warlock/Temp/bin/Debug/Mono.Cecil.Mdb.dll
