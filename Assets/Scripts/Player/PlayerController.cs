@@ -31,7 +31,7 @@ public class PlayerController : NetworkBehaviour
 
     private Vector3 curVelocity = Vector3.zero;
 
-    public GameObject gameField;
+    private GameObject gameField;
     public GameObject bulletTest;
     private Rigidbody rigidBody;
 
@@ -50,6 +50,7 @@ public class PlayerController : NetworkBehaviour
     {
         onSpellHitEvent = new OnSpellHitEvent();
         playerSync = GetComponent<PlayerSync>();
+        gameField = GameField.getGameField().gameObject;
 
         movementManager = new MovementManager(this);
 
@@ -73,7 +74,7 @@ public class PlayerController : NetworkBehaviour
         }
 
         //only for testing purposes - later spells will be added to spellbook from merchant
-        spellBook.Add(new SpellBookItem<Fireball>((GameObject)Resources.Load("Prefabs/Fireball", typeof(GameObject)), 1));
+        spellBook.Add(new SpellBookItem<Fireball>( (GameObject) Resources.Load("Prefabs/Fireball"), 1 ));
         spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
     }
 
@@ -155,7 +156,7 @@ public class PlayerController : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha2))        //only for testing purposes
         {
-            GameObject fireball = spellBook[1].generateSpell(this);
+            spellBook[1].generateSpell(this);       //speedboost
         }
 
         mouseLook.UpdateCursorLock();
@@ -165,14 +166,6 @@ public class PlayerController : NetworkBehaviour
     void CmdCast()
     {
         GameObject fireball = spellBook[0].generateSpell(this);
-
-        /*
-        GameObject fireball = (GameObject)Instantiate(fireballPrefab, spellSpawner.position, spellSpawner.rotation);
-
-        //fireball.GetComponent<Rigidbody>().velocity = fireball.transform.forward * 6;
-        fireball.GetComponent<Rigidbody>().AddForce(fireball.transform.forward * 200);
-        */
-
         NetworkServer.Spawn(fireball);
     }
 
@@ -206,10 +199,10 @@ public class PlayerController : NetworkBehaviour
         impact += direction.normalized * force / 5.0F;
     }
 
-    public void OnSpellHit(PlayerController affectedPlayer, ProjectileSpell source, Vector3 pushDir)
+    public void OnSpellHit(ProjectileSpell source, Vector3 pushDir)
     {
-        Debug.Log("OnSpellHit called for player" + affectedPlayer.netId);
-        affectedPlayer.Knockback(-pushDir, source.getKnockbackForce());
+        Debug.Log("OnSpellHit called for player" + this.netId);
+        this.Knockback(-pushDir, source.getKnockbackForce());
     }
 
     public Transform getSpellSpawner()

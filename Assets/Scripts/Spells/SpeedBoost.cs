@@ -4,38 +4,20 @@ using System;
 
 public class SpeedBoost : Spell
 {
+    private int buffIntKey;
 
-    private bool isPlayerBoosted = false;
-    private float secondsBoosted = 0;
-    private float speedDifference;
-
-    // Update is called once per frame
-    void Update()
+    public override void castSpell()
     {
-        if (isPlayerBoosted)
-        {
-            Destroy(this.gameObject, 2 + (0.5F * getSpellLevel()));
-            isPlayerBoosted = false;
-        }
+        buffIntKey = getCaster().movementManager.addInfluence(1 + getSpellLevel(), "Multiply");
+        Destroy(this.gameObject, 2 + (0.5F * getSpellLevel()));
     }
 
     public void OnDestroy()
     {
         if (getCaster() != null)
         {
-            getCaster().movementManager.impact(speedDifference, "Add");
+            getCaster().movementManager.removeInfluence(buffIntKey);
         }
-    }
-
-    public override void affectPlayer(PlayerController player)
-    {
-
-    }
-
-    public override void castSpell()
-    {
-        speedDifference = getCaster().movementManager.impact(1 + getSpellLevel(), "Multiply");
-        isPlayerBoosted = true;
     }
 
     public override float getKnockbackForce()
@@ -43,4 +25,8 @@ public class SpeedBoost : Spell
         return 0;
     }
 
+    public override void affectPlayer(PlayerController player)
+    {
+
+    }
 }

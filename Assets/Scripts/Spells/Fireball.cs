@@ -8,8 +8,6 @@ public class Fireball : ProjectileSpell {
     public int shotSpeed;               //assigned by Inspector
     public float knockbackForce;        //assigned by Inspector
 
-    private Vector3 moveDirection = Vector3.back;           //only assigned for testing
-
     public override float getKnockbackForce()
     {
         return knockbackForce;

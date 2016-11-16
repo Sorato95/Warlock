@@ -37,8 +37,4 @@ public abstract class Spell : MonoBehaviour
     {
         return GetComponent<Rigidbody>();
     }
-
-
-
-
 }

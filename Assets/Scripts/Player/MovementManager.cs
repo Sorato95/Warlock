@@ -1,4 +1,8 @@
-public class MovementManager(){
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+public class MovementManager {
 	
 	private PlayerController playerToManage;
 	
@@ -8,15 +12,18 @@ public class MovementManager(){
 	public MovementManager (PlayerController playerToManage){
 		this.playerToManage = playerToManage;
 		influencesByIntKey = new Dictionary<int, MovementInfluence>();
+        playerToManage.curMoveSpeed = playerToManage.standardMoveSpeed;
 	}
 	
-	public setStandardMoveSpeed (float standardMoveSpeed){
+	public void setStandardMoveSpeed (float standardMoveSpeed){
 		playerToManage.standardMoveSpeed = standardMoveSpeed;
 	}
 	
 	public int addInfluence (float val, string AddOrMultiplyOrDivide){
-		influencesByIntKey.Add(findKey(), new MovementInfluence(val, AddOrMultiplyOrDivide);
+        latestKey = findKey();
+		influencesByIntKey.Add(findKey(), new MovementInfluence(latestKey, AddOrMultiplyOrDivide));
 		applyAllInfluences();
+        return latestKey;
 	}
 	
 	public void removeInfluence (int intKey) {
@@ -27,8 +34,8 @@ public class MovementManager(){
 	private void applyAllInfluences(){
 		float newSpeed = playerToManage.standardMoveSpeed;
 		
-		foreach (int intKey : influencesByIntKey.Keys){
-			newSpeed = influencesByIntKey.Get(intKey).apply(newSpeed);
+		foreach (int intKey in influencesByIntKey.Keys) {
+			newSpeed = influencesByIntKey[intKey].apply(newSpeed);;
 		}
 		
 		playerToManage.curMoveSpeed = newSpeed;

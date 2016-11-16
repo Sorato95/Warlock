@@ -63,9 +63,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\GameField.cs" />
     <Compile Include="Assets\Scripts\MouseLook.cs" />
     <Compile Include="Assets\Scripts\Network\CustomNetworkManager.cs" />
     <Compile Include="Assets\Scripts\Player\HealthBar.cs" />
+    <Compile Include="Assets\Scripts\Player\InvalidOperandException.cs" />
     <Compile Include="Assets\Scripts\Player\MovementInfluence.cs" />
     <Compile Include="Assets\Scripts\Player\MovementManager.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />

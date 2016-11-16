@@ -1,3 +1,6 @@
+using UnityEngine;
+using System.Collections;
+
 public class MovementInfluence {
 	
 	private float val;
@@ -8,7 +11,7 @@ public class MovementInfluence {
 		this.operand = AddOrMultiplyOrDivide;
 	}
 	
-	public apply (float speedToInfluence){
+	public float apply (float speedToInfluence){
 		switch(operand){
 			case "Add": 		return speedToInfluence + val;
 			case "Multiply":	return speedToInfluence * val;

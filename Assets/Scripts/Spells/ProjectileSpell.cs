@@ -24,14 +24,14 @@ public abstract class ProjectileSpell : Spell {
                 reactToCollision(c);
             }
 
-            PlayerController caster = getCaster();
+            PlayerController caster = this.getCaster();
+            PlayerController playerHit = c.gameObject.GetComponent<PlayerController>();
 
             Debug.Log("caster:" + caster);
-
-            OnSpellHitEvent hitEvent = caster.getOnSpellHitEvent();
+            OnSpellHitEvent hitEvent = playerHit.getOnSpellHitEvent();
             
-            hitEvent.Invoke(c.gameObject.GetComponent<PlayerController>(), this, transform.forward);
-            affectPlayer(c.gameObject.GetComponent<PlayerController>());
+            hitEvent.Invoke(this, transform.forward);
+            affectPlayer(playerHit);
         }
         else
         {
