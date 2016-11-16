@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
+﻿
 
 public class SpeedBoost : Spell
 {
@@ -8,7 +6,7 @@ public class SpeedBoost : Spell
 
     public override void castSpell()
     {
-        buffIntKey = getCaster().movementManager.addInfluence(1 + getSpellLevel(), "Multiply");
+        buffIntKey = getCaster().movementManager.addInfluence(2 + getSpellLevel(), "Multiply");
         Destroy(this.gameObject, 2 + (0.5F * getSpellLevel()));
     }
 

@@ -1,5 +1,3 @@
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class MovementManager {
@@ -21,7 +19,7 @@ public class MovementManager {
 	
 	public int addInfluence (float val, string AddOrMultiplyOrDivide){
         latestKey = findKey();
-		influencesByIntKey.Add(findKey(), new MovementInfluence(latestKey, AddOrMultiplyOrDivide));
+		influencesByIntKey.Add(findKey(), new MovementInfluence(val, AddOrMultiplyOrDivide));
 		applyAllInfluences();
         return latestKey;
 	}
