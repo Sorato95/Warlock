@@ -50,7 +50,7 @@ public class PlayerController : NetworkBehaviour
     {
         onSpellHitEvent = new OnSpellHitEvent();
         playerSync = GetComponent<PlayerSync>();
-        gameField = GameField.getGameField().gameObject;
+        //gameField = GameField.getGameField().gameObject;
 
         movementManager = new MovementManager(this);
 
