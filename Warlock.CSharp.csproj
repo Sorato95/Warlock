@@ -63,9 +63,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\DebugConsole.cs" />
     <Compile Include="Assets\Scripts\GameField.cs" />
     <Compile Include="Assets\Scripts\MouseLook.cs" />
     <Compile Include="Assets\Scripts\Network\CustomNetworkManager.cs" />
+    <Compile Include="Assets\Scripts\Network\NetMessages.cs" />
     <Compile Include="Assets\Scripts\Player\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Player\InvalidOperandException.cs" />
     <Compile Include="Assets\Scripts\Player\MovementInfluence.cs" />
@@ -73,6 +75,10 @@
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerNetworkSetup.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSync.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\ProjectileSpellScript.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\ScriptableProjectileSpell.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\ScriptableSpell.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\Spells\Fireball.cs" />
     <Compile Include="Assets\Scripts\Spells\Fireball.cs" />
     <Compile Include="Assets\Scripts\Spells\OnSpellHitEvent.cs" />
     <Compile Include="Assets\Scripts\Spells\ProjectileSpell.cs" />

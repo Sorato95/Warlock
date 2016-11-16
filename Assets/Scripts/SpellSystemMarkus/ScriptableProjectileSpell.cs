@@ -28,13 +28,12 @@ public class ScriptableProjectileSpell : SpellSystemMarkus.ScriptableSpell {
 
 	public virtual void OnCollision (Collider collider)
 	{
-		DebugConsole.Log ("OnCollision called");
 		PlayerController playerHit = collider.gameObject.GetComponent<PlayerController>();
-		playerHit.OnHit (projectileSpellScript);
+        DebugConsole.Log("collision for player: " + playerHit.netId);
+		playerHit.ServerOnHit (projectileSpellScript);
 	}
 
 	public override GameObject TriggerSpell() {
-		DebugConsole.Log ("FB casted by " + casterNetworkId);
 		projectileSpellScript.Initialize ();
 		projectileSpellScript.castSpell ();
 		return projectileSpellScript.gameObject;

@@ -13,7 +13,6 @@ public abstract class ProjectileSpellScript : NetworkBehaviour {
 	protected Rigidbody rigidBody;
 
 	public void Initialize() {
-		Debug.Log ("start called in projectilespellscript");
 		rigidBody = GetComponent<Rigidbody> ();
 	}
 

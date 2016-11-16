@@ -47,9 +47,11 @@ public class PlayerController : NetworkBehaviour
 
 	public ScriptableProjectileSpell test_Fireball;
 
+
     // "constructor" when script is initialized
     void Awake()
     {
+        NetworkManager.singleton.client.RegisterHandler(MsgCollisionDetected.MSGID, OnHit);
         onSpellHitEvent = new OnSpellHitEvent();
         playerSync = GetComponent<PlayerSync>();
         //gameField = GameField.getGameField().gameObject;
@@ -78,8 +80,6 @@ public class PlayerController : NetworkBehaviour
         //only for testing purposes - later spells will be added to spellbook from merchant
         spellBook.Add(new SpellBookItem<Fireball>( (GameObject) Resources.Load("Prefabs/Fireball"), 1 ));
         spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
-
-		DebugConsole.Log ("testmessage");
     }
 
     void FixedUpdate()
@@ -121,8 +121,6 @@ public class PlayerController : NetworkBehaviour
                 isOnLavaZone = false;
             }
         }
-
-
     }
 
     // Update is called once per frame
@@ -171,8 +169,15 @@ public class PlayerController : NetworkBehaviour
 			DebugConsole.isVisible = !DebugConsole.isVisible;
 		}
 
+        if (Input.GetKeyDown(KeyCode.Plus))
+        {
+            playerSync.SyncPlayer();
+        }
+
         mouseLook.UpdateCursorLock();
     }
+
+
 
 	[Command]
 	void CmdTestFireball(NetworkInstanceId casterNetworkId) {
@@ -224,12 +229,31 @@ public class PlayerController : NetworkBehaviour
         this.Knockback(-pushDir, source.getKnockbackForce());
     }
 
-	public void OnHit(ProjectileSpellScript source) {
-		if (!isLocalPlayer) {
+    //called on client
+    [ClientCallback]
+    void OnHit(NetworkMessage msg)
+    {
+        MsgCollisionDetected receivedMsg = msg.ReadMessage<MsgCollisionDetected>();
+
+        PlayerController playerCtrl = ClientScene.FindLocalObject(receivedMsg.netId).GetComponent<PlayerController>();
+
+        DebugConsole.Log("OnHit called for player" + playerCtrl.netId);
+        playerCtrl.Knockback(receivedMsg.pushDirection, receivedMsg.knockbackForce);
+    }
+    
+    // called on server
+    [ServerCallback]
+	public void ServerOnHit(ProjectileSpellScript source) {
+		if (!isServer) {
 			return;
 		}
-		Debug.Log("OnHit called for player" + this.netId);
-		this.Knockback(-source.transform.forward, source.knockBackForce);
+
+        var msg = new MsgCollisionDetected();
+        msg.knockbackForce = source.knockBackForce;
+        msg.pushDirection = -source.transform.forward;
+        msg.netId = netId;
+
+        base.connectionToClient.Send(MsgCollisionDetected.MSGID, msg);
 	}
 
     public Transform getSpellSpawner()
