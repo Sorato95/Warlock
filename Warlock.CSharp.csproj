@@ -75,18 +75,17 @@
     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerNetworkSetup.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerSync.cs" />
-    <Compile Include="Assets\Scripts\SpellSystemMarkus\ProjectileSpellScript.cs" />
     <Compile Include="Assets\Scripts\SpellSystemMarkus\ScriptableProjectileSpell.cs" />
     <Compile Include="Assets\Scripts\SpellSystemMarkus\ScriptableSpell.cs" />
-    <Compile Include="Assets\Scripts\SpellSystemMarkus\SpellScript.cs" />
-    <Compile Include="Assets\Scripts\SpellSystemMarkus\Spells\Fireball.cs" />
-    <Compile Include="Assets\Scripts\SpellSystemMarkus\Spells\SpeedBoost.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\Spells\ProjectileSpellScript.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\Spells\Scripts\Fireball.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\Spells\Scripts\SpeedBoost.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\Spells\SpellScript.cs" />
     <Compile Include="Assets\Scripts\Spells\FireballAlex.cs" />
     <Compile Include="Assets\Scripts\Spells\OnSpellHitEvent.cs" />
     <Compile Include="Assets\Scripts\Spells\ProjectileSpell.cs" />
     <Compile Include="Assets\Scripts\Spells\Spell.cs" />
     <Compile Include="Assets\Scripts\Spells\SpellBookItem.cs" />
-    <Compile Include="Assets\Scripts\Spells\SpellBookItemGeneric.cs" />
     <Compile Include="Assets\Scripts\Spells\SpellInitializer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
