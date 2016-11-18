@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class Fireball : ProjectileSpell {
+public class FireballAlex : ProjectileSpell {
 
     public float timeToLive;            //assigned by Inspector
     public int shotSpeed;               //assigned by Inspector

@@ -78,11 +78,12 @@
     <Compile Include="Assets\Scripts\SpellSystemMarkus\ProjectileSpellScript.cs" />
     <Compile Include="Assets\Scripts\SpellSystemMarkus\ScriptableProjectileSpell.cs" />
     <Compile Include="Assets\Scripts\SpellSystemMarkus\ScriptableSpell.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\SpellScript.cs" />
     <Compile Include="Assets\Scripts\SpellSystemMarkus\Spells\Fireball.cs" />
-    <Compile Include="Assets\Scripts\Spells\Fireball.cs" />
+    <Compile Include="Assets\Scripts\SpellSystemMarkus\Spells\SpeedBoost.cs" />
+    <Compile Include="Assets\Scripts\Spells\FireballAlex.cs" />
     <Compile Include="Assets\Scripts\Spells\OnSpellHitEvent.cs" />
     <Compile Include="Assets\Scripts\Spells\ProjectileSpell.cs" />
-    <Compile Include="Assets\Scripts\Spells\SpeedBoost.cs" />
     <Compile Include="Assets\Scripts\Spells\Spell.cs" />
     <Compile Include="Assets\Scripts\Spells\SpellBookItem.cs" />
     <Compile Include="Assets\Scripts\Spells\SpellBookItemGeneric.cs" />

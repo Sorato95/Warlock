@@ -2,18 +2,28 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-namespace SpellSystemMarkus {
-	public abstract class ScriptableSpell : ScriptableObject {
-		public string spellName = "New Spell";
+[CreateAssetMenu(menuName = "Spells/UtilitySpell", order = 1)]
+public class ScriptableSpell : ScriptableObject {
+    public string spellScriptName = "Script Name";          //assigned by Inspector
+        
+    protected PlayerController caster;
+    protected System.Type spellScript;
 
-		protected PlayerController caster;
-		protected NetworkInstanceId casterNetworkId;
+    protected void Initialize(NetworkInstanceId networkId)
+    {
+        this.caster = ClientScene.FindLocalObject(networkId).GetComponent<PlayerController>();
+        this.spellScript = System.Reflection.Assembly.GetExecutingAssembly().GetType(spellScriptName);
+    }
 
-		public virtual void Initialize(NetworkInstanceId networkId) {
-			this.caster = ClientScene.FindLocalObject (networkId).GetComponent<PlayerController>();
-			this.casterNetworkId = networkId;
-		}
+    public virtual GameObject Generate(NetworkInstanceId networkId) {
+        this.Initialize(networkId);
 
-		public abstract GameObject TriggerSpell();
-	}
+        GameObject spellObject = new GameObject(); 
+        SpellScript spell = (SpellScript) spellObject.AddComponent(spellScript);
+        spellObject.name = spellScript.Name;
+
+        spell.Initialize(caster);
+        spell.castSpell();
+        return spellObject;
+    }
 }

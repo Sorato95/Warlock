@@ -45,7 +45,8 @@ public class PlayerController : NetworkBehaviour
     private bool isEventListenerAdded = false;
     public OnSpellHitEvent onSpellHitEvent;
 
-	public ScriptableProjectileSpell test_Fireball;
+	public ScriptableSpell test_Fireball;
+    public ScriptableSpell test_SpeedBoost;
 
 
     // "constructor" when script is initialized
@@ -55,7 +56,7 @@ public class PlayerController : NetworkBehaviour
         onSpellHitEvent = new OnSpellHitEvent();
         playerSync = GetComponent<PlayerSync>();
         //gameField = GameField.getGameField().gameObject;
-
+        
         movementManager = new MovementManager(this);
 
         if (!isEventListenerAdded)
@@ -78,8 +79,8 @@ public class PlayerController : NetworkBehaviour
         }
 
         //only for testing purposes - later spells will be added to spellbook from merchant
-        spellBook.Add(new SpellBookItem<Fireball>( (GameObject) Resources.Load("Prefabs/Fireball"), 1 ));
-        spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
+        spellBook.Add(new SpellBookItem<FireballAlex>( (GameObject) Resources.Load("Prefabs/Fireball"), 1 ));
+        //spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
     }
 
     void FixedUpdate()
@@ -158,7 +159,7 @@ public class PlayerController : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha2))        //only for testing purposes
         {
-            spellBook[1].generateSpell(this);       //speedboost
+            test_SpeedBoost.Generate(this.netId);       //speedboost
         }
 
 		if (Input.GetKeyDown (KeyCode.H)) {
@@ -181,8 +182,7 @@ public class PlayerController : NetworkBehaviour
 
 	[Command]
 	void CmdTestFireball(NetworkInstanceId casterNetworkId) {
-		test_Fireball.Initialize (casterNetworkId);
-		GameObject fireball = test_Fireball.TriggerSpell ();
+        GameObject fireball = test_Fireball.Generate (casterNetworkId);
 		NetworkServer.Spawn (fireball);
 	}
 
