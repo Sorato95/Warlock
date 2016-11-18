@@ -79,7 +79,7 @@ public class PlayerController : NetworkBehaviour
         }
 
         //only for testing purposes - later spells will be added to spellbook from merchant
-        spellBook.Add(new SpellBookItem<FireballAlex>( (GameObject) Resources.Load("Prefabs/Fireball"), 1 ));
+        //spellBook.Add(new SpellBookItem<FireballAlex>( (GameObject) Resources.Load("Prefabs/Fireball"), 1 ));
         //spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
     }
 
@@ -189,8 +189,8 @@ public class PlayerController : NetworkBehaviour
     [Command]
     void CmdCast()
     {
-        GameObject fireball = spellBook[0].generateSpell(this);
-        NetworkServer.Spawn(fireball);
+        //GameObject fireball = spellBook[0].generateSpell(this);
+        //NetworkServer.Spawn(fireball);
     }
 
     void OnChangeHealth(int currentHealth)

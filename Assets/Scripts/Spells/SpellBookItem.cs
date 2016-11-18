@@ -29,9 +29,9 @@ public class SpellBookItem {
         spellLevel++;
     }
 
-    public SpellBookItem(GameObject spellPrefab, int level)
+    public SpellBookItem(ScriptableObject spellAsset, int level)
     {
-        this.spellPrefab = spellPrefab;
+        this.spellAsset = spellAsset;
         this.spellLevel = level;
     }
 
