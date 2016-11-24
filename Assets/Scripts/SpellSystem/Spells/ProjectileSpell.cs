@@ -2,22 +2,43 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-public abstract class ProjectileSpellScript : SpellScript {
+public abstract class ProjectileSpell : Spell {
 	
-	[@HideInInspector]
-	public float knockBackForce;
-	[@HideInInspector]
-	public float spellSpeed;
-	[@HideInInspector]
-	public float timeToLive;
-	protected Rigidbody rigidBody;
+	protected float knockBackForce;
+    public float KnockBackForce
+    {
+        get
+        {
+            return knockBackForce;
+        }
+    }
+
+    protected float spellSpeed;
+    public float SpellSpeed
+    {
+        get
+        {
+            return spellSpeed;
+        }
+    }
+
+    protected float timeToLive;
+    public float TimeToLive
+    {
+        get
+        {
+            return timeToLive;
+        }
+    }
+
+    protected Rigidbody rigidBody;
 
     public abstract void reactToCollision(Collider c);
     public abstract bool isDestroyedOnCollision(bool isPlayerCollision);
 
-    public void Initialize(PlayerController caster, float knockBackForce, float spellSpeed, float timeToLive)
+    public void Initialize(PlayerController caster, int level, float knockBackForce, float spellSpeed, float timeToLive)
     {
-        base.Initialize(caster);
+        base.Initialize(caster, level);
 		rigidBody = GetComponent<Rigidbody> ();
 
         this.knockBackForce = knockBackForce;
@@ -25,13 +46,7 @@ public abstract class ProjectileSpellScript : SpellScript {
         this.timeToLive = timeToLive;
 	}
 
-	/*public delegate void CollisionEvent (Collider collider);
-	public event CollisionEvent OnCollisionEvent;*/
-
 	void OnTriggerEnter(Collider collider) {
-		//if (OnCollisionEvent != null) {
-            //OnCollisionEvent(collider);
-
         PlayerController playerHit = collider.gameObject.GetComponent<PlayerController>();
 
         if (playerHit == null)
@@ -44,11 +59,9 @@ public abstract class ProjectileSpellScript : SpellScript {
             playerHit.ServerOnHit(this);
             if (isDestroyedOnCollision(true)) { NetworkServer.Destroy(this.gameObject); }
             else { reactToCollision(collider); }
-        }
 
-        DebugConsole.Log("collision for player: " + playerHit.netId);
-        
-        //}
+            DebugConsole.Log("collision for player: " + playerHit.netId);
+        }
 	}
 
 

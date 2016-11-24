@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class Fireball : ProjectileSpellScript {
+public class Fireball : ProjectileSpell {
 
 	public override void castSpell() {
 		rigidBody.velocity = this.transform.forward * this.spellSpeed;

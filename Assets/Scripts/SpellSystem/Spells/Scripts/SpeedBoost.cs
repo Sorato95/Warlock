@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class SpeedBoost : SpellScript
+public class SpeedBoost : Spell
 {
     private int buffIntKey;
 
