@@ -14,6 +14,6 @@ public class SpellBook : List<SpellBookItem>{
     public void AddAndInitialize(SpellBookItem item)
     {
         base.Add(item);
-        item.SpellAsset.Initialize(player.netId);
+        item.SpellAsset.Initialize(player.netId);       //initialize the cloned asset for the player
     }
 }

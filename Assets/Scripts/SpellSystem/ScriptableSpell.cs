@@ -6,10 +6,12 @@ using UnityEngine.Networking;
 public class ScriptableSpell : ScriptableObject
 {
     public string spellScriptName = "Script Name";          //assigned by Inspector
+    public float timeToLive = 5F;                           //assigned by Inspector
+
     protected System.Type spellScript;
     protected PlayerController caster;
 
-    //called once per player (each player possesses their own copy of the spell asset in their spellbook)
+    //called once per player (each player possesses their own clone of the spell asset in their spellbook)
     public void Initialize(NetworkInstanceId casterNetworkId)
     {
         this.spellScript = System.Reflection.Assembly.GetExecutingAssembly().GetType(spellScriptName);
@@ -23,8 +25,10 @@ public class ScriptableSpell : ScriptableObject
         Spell spell = (Spell)spellObject.AddComponent(spellScript);
         spellObject.name = spellScript.Name;
 
-        spell.Initialize(caster, spellLevel);
+        spell.Initialize(caster, spellLevel, timeToLive);
         spell.castSpell();
+
+        Destroy(spellObject, spell.TimeToLive);
         return spellObject;
     }
 }

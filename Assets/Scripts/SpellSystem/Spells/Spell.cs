@@ -13,6 +13,15 @@ public abstract class Spell : NetworkBehaviour {
         }
     }
 
+    protected float timeToLive;
+    public virtual float TimeToLive
+    {
+        get
+        {
+            return timeToLive;
+        }
+    }
+
     protected int level;
     public int Level
     {
@@ -25,9 +34,10 @@ public abstract class Spell : NetworkBehaviour {
 
     public abstract void castSpell();
 
-    public virtual void Initialize(PlayerController caster, int level)
+    public virtual void Initialize(PlayerController caster, int level, float timeToLive)
     {
         this.caster = caster;
         this.level = level;
+        this.timeToLive = timeToLive;
     }
 }
