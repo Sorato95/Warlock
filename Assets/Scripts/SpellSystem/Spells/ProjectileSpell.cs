@@ -3,9 +3,18 @@ using System.Collections;
 using UnityEngine.Networking;
 
 public abstract class ProjectileSpell : Spell {
-	
+
+    protected int damageDealt;
+    public virtual int DamageDealt
+    {
+        get
+        {
+            return damageDealt;
+        }
+    }
+
 	protected float knockBackForce;
-    public float KnockBackForce
+    public virtual float KnockBackForce
     {
         get
         {
@@ -14,7 +23,7 @@ public abstract class ProjectileSpell : Spell {
     }
 
     protected float spellSpeed;
-    public float SpellSpeed
+    public virtual float SpellSpeed
     {
         get
         {
@@ -22,28 +31,28 @@ public abstract class ProjectileSpell : Spell {
         }
     }
 
-    protected float timeToLive;
-    public float TimeToLive
+    public virtual Vector3 PushDirection
     {
         get
         {
-            return timeToLive;
+            return transform.forward * -1;
         }
     }
 
     protected Rigidbody rigidBody;
 
-    public abstract void reactToCollision(Collider c);
-    public abstract bool isDestroyedOnCollision(bool isPlayerCollision);
+    public abstract void affectPlayer(PlayerController player);             //affect the player that was hit by the spell in some way
+    public abstract bool isDestroyedOnCollision(bool isPlayerCollision);    //determine whether spell should be destroyed on (player-)collision
+    public abstract void reactToCollision(Collider c);                      //if spell is not destroyed on collision, it can react
 
-    public void Initialize(PlayerController caster, int level, float knockBackForce, float spellSpeed, float timeToLive)
+    public void Initialize(PlayerController caster, int level, float timeToLive, int damageDealt, float knockBackForce, float spellSpeed)
     {
-        base.Initialize(caster, level);
+        base.Initialize(caster, level, timeToLive);
 		rigidBody = GetComponent<Rigidbody> ();
 
+        this.damageDealt = damageDealt;
         this.knockBackForce = knockBackForce;
         this.spellSpeed = spellSpeed;
-        this.timeToLive = timeToLive;
 	}
 
 	void OnTriggerEnter(Collider collider) {
@@ -56,11 +65,10 @@ public abstract class ProjectileSpell : Spell {
         }
         else
         {
+            DebugConsole.Log("collision for player: " + playerHit.netId);
             playerHit.ServerOnHit(this);
             if (isDestroyedOnCollision(true)) { NetworkServer.Destroy(this.gameObject); }
             else { reactToCollision(collider); }
-
-            DebugConsole.Log("collision for player: " + playerHit.netId);
         }
 	}
 

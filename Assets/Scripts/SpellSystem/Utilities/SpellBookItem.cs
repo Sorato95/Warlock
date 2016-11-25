@@ -35,7 +35,7 @@ public class SpellBookItem {
         this.spellLevel = level;
 
         //each player holds their own copy of the spellAsset initialized for them as caster
-        //the copied spellAsset will be initialized by SpellBook's AddAndInitialize-method
+        //the cloned spellAsset will be initialized for the caster by SpellBook's AddAndInitialize-method
         this.spellAsset = ScriptableObject.Instantiate(spellAsset);                      
     }
 
