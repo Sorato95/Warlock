@@ -24,6 +24,12 @@ public class PlayerSync : NetworkBehaviour
         LerpRotation();
     }
 
+    public void SyncPlayer()
+    {
+        playerTransform.position = syncPos;
+        playerTransform.rotation = syncPlayerRotation;
+    }
+
     void LerpPosition()
     {
         if (!isLocalPlayer)
