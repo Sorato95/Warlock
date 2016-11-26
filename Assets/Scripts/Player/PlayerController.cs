@@ -247,8 +247,8 @@ public class PlayerController : NetworkBehaviour
 
         var msg = new MsgCollisionDetected();
         msg.playerHitNetId = this.netId;
-        msg.damageDealt = source.DamageDealt;           //sehr unschön... warum funktioniert das senden der spell-referenz nicht?
-        msg.knockbackForce = source.KnockBackForce;     //habs versucht hat mir aber n komischen error geworfen... glaub hat mit serialization zu tun
+        msg.damageDealt = source.DamageDealt;
+        msg.knockbackForce = source.KnockBackForce;
         msg.pushDirection = source.PushDirection;
 
         //source.affectPlayer(playerHit);       TO BE IMPLEMENTED !!

@@ -9,4 +9,6 @@ public class MsgCollisionDetected : MessageBase {
     public int damageDealt;
     public float knockbackForce;
     public Vector3 pushDirection;
+
+    
 }

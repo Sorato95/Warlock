@@ -41,7 +41,7 @@ public abstract class ProjectileSpell : Spell {
 
     protected Rigidbody rigidBody;
 
-    public abstract void affectPlayer(PlayerController player);             //affect the player that was hit by the spell in some way
+    public abstract void affectPlayer(PlayerController player);             //affect the player that was hit by the spell in some (special) way
     public abstract bool isDestroyedOnCollision(bool isPlayerCollision);    //determine whether spell should be destroyed on (player-)collision
     public abstract void reactToCollision(Collider c);                      //if spell is not destroyed on collision, it can react
 
