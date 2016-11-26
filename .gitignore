@@ -4,3 +4,5 @@ Assembly-CSharp.csproj
 Assembly-CSharp-Editor.csproj
 Warlock.sln
 out/
+
+Warlock.userprefs

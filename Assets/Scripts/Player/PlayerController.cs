@@ -8,8 +8,28 @@ public class PlayerController : NetworkBehaviour
 {
     public Transform spellSpawner;           //assigned by Inspector
     public float standardMoveSpeed;          //assigned by Inspector
-    public MovementManager movementManager;
-    public float curMoveSpeed;               //asigned by movementManager
+
+    private MovementManager movementManager;
+    public MovementManager MovementManager
+    {
+        get
+        {
+            return movementManager;
+        }
+    }
+
+    private float curMoveSpeed;              //controlled by movementManager
+    public float CurMoveSpeed
+    {
+        get
+        {
+            return curMoveSpeed;
+        }
+        set
+        {
+            this.curMoveSpeed = value;
+        }
+    }
 
     public RectTransform healthBar;
     public const int maxHealth = 100;
@@ -41,24 +61,21 @@ public class PlayerController : NetworkBehaviour
 
     public Text textPlayerId;
 
-    private List<SpellBookItem> spellBook = new List<SpellBookItem>();
-    private bool isEventListenerAdded = false;
-    public OnSpellHitEvent onSpellHitEvent;
+    private SpellBook spellBook;
+
+    //for testing purposes
+	public ScriptableSpell test_Fireball;
+    public ScriptableSpell test_SpeedBoost;
+
 
     // "constructor" when script is initialized
     void Awake()
     {
-        onSpellHitEvent = new OnSpellHitEvent();
+        NetworkManager.singleton.client.RegisterHandler(MsgCollisionDetected.MSGID, OnHit);
         playerSync = GetComponent<PlayerSync>();
-        gameField = GameField.getGameField().gameObject;
 
+        spellBook = new SpellBook(this);
         movementManager = new MovementManager(this);
-
-        if (!isEventListenerAdded)
-        {
-            onSpellHitEvent.AddListener(OnSpellHit);
-            isEventListenerAdded = true;
-        }
     }
 
     // Use this for initialization
@@ -73,9 +90,10 @@ public class PlayerController : NetworkBehaviour
             transform.position = new Vector3(transform.position.x, 1, transform.position.y);
         }
 
-        //only for testing purposes - later spells will be added to spellbook from merchant
-        spellBook.Add(new SpellBookItem<Fireball>( (GameObject) Resources.Load("Prefabs/Fireball"), 1 ));
-        spellBook.Add(new SpellBookItem<SpeedBoost>(null, 1));
+        
+        //for testing purposes
+        spellBook.AddAndInitialize(new SpellBookItem(test_Fireball, 1));
+        spellBook.AddAndInitialize(new SpellBookItem(test_SpeedBoost, 1));
     }
 
     void FixedUpdate()
@@ -117,8 +135,6 @@ public class PlayerController : NetworkBehaviour
                 isOnLavaZone = false;
             }
         }
-
-
     }
 
     // Update is called once per frame
@@ -151,23 +167,33 @@ public class PlayerController : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))        //only for testing purposes
         {
-            CmdCast();
+            CmdTestFireball(this.netId);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))        //only for testing purposes
         {
-            spellBook[1].generateSpell(this);       //speedboost
+            spellBook[1].generateSpell();            //speedboost
+        }
+
+		if (Input.GetKeyDown (KeyCode.L)) {
+			DebugConsole.isVisible = !DebugConsole.isVisible;
+		}
+
+        if (Input.GetKeyDown(KeyCode.Plus))
+        {
+            playerSync.SyncPlayer();
         }
 
         mouseLook.UpdateCursorLock();
     }
 
-    [Command]
-    void CmdCast()
-    {
-        GameObject fireball = spellBook[0].generateSpell(this);
-        NetworkServer.Spawn(fireball);
-    }
+
+
+	[Command]
+	void CmdTestFireball(NetworkInstanceId casterNetworkId) {
+        GameObject fireball = spellBook[0].generateSpell();
+		NetworkServer.Spawn (fireball);
+	}
 
     void OnChangeHealth(int currentHealth)
     {
@@ -199,19 +225,39 @@ public class PlayerController : NetworkBehaviour
         impact += direction.normalized * force / 5.0F;
     }
 
-    public void OnSpellHit(ProjectileSpell source, Vector3 pushDir)
+    //called on client
+    [ClientCallback]
+    public void OnHit(NetworkMessage msg)
     {
-        Debug.Log("OnSpellHit called for player" + this.netId);
-        this.Knockback(-pushDir, source.getKnockbackForce());
+        MsgCollisionDetected receivedMsg = msg.ReadMessage<MsgCollisionDetected>();
+
+        PlayerController playerCtrl = ClientScene.FindLocalObject(receivedMsg.playerHitNetId).GetComponent<PlayerController>();
+
+        DebugConsole.Log("OnHit called for player" + playerCtrl.netId);
+        playerCtrl.TakeDamage(receivedMsg.damageDealt);
+        playerCtrl.Knockback(receivedMsg.pushDirection, receivedMsg.knockbackForce);
     }
+    
+    // called on server
+    [ServerCallback]
+	public void ServerOnHit(ProjectileSpell source) {
+		if (!isServer) {
+			return;
+		}
+
+        var msg = new MsgCollisionDetected();
+        msg.playerHitNetId = this.netId;
+        msg.damageDealt = source.DamageDealt;           //sehr unschön... warum funktioniert das senden der spell-referenz nicht?
+        msg.knockbackForce = source.KnockBackForce;     //habs versucht hat mir aber n komischen error geworfen... glaub hat mit serialization zu tun
+        msg.pushDirection = source.PushDirection;
+
+        //source.affectPlayer(playerHit);       TO BE IMPLEMENTED !!
+
+        base.connectionToClient.Send(MsgCollisionDetected.MSGID, msg);
+	}
 
     public Transform getSpellSpawner()
     {
         return spellSpawner;
-    }
-
-    public OnSpellHitEvent getOnSpellHitEvent()
-    {
-        return onSpellHitEvent;
     }
 }

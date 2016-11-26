@@ -10,7 +10,7 @@ public class MovementManager {
 	public MovementManager (PlayerController playerToManage){
 		this.playerToManage = playerToManage;
 		influencesByIntKey = new Dictionary<int, MovementInfluence>();
-        playerToManage.curMoveSpeed = playerToManage.standardMoveSpeed;
+        playerToManage.CurMoveSpeed = playerToManage.standardMoveSpeed;
 	}
 	
 	public void setStandardMoveSpeed (float standardMoveSpeed){
@@ -36,7 +36,7 @@ public class MovementManager {
 			newSpeed = influencesByIntKey[intKey].apply(newSpeed);;
 		}
 		
-		playerToManage.curMoveSpeed = newSpeed;
+		playerToManage.CurMoveSpeed = newSpeed;
 	}
 	
 	private int findKey (){
