@@ -60,8 +60,11 @@ public abstract class ProjectileSpell : Spell {
 
         if (playerHit == null)
         {
-            if (isDestroyedOnCollision(false)) { NetworkServer.Destroy(this.gameObject); }
-            else { reactToCollision(collider); }
+            if (collider.gameObject.tag != "TriggerArea")
+            {
+                if (isDestroyedOnCollision(false)) { NetworkServer.Destroy(this.gameObject); }
+                else { reactToCollision(collider); }
+            }
         }
         else
         {
